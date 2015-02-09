@@ -118,10 +118,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void takePhoto() {
 		Log.d(LOG, "takePhoto() started");
 		// DONE: Launch an activity using the camera intent
+		
 		Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		Uri uri = PhotoUtils.getOutputMediaUri(getString(R.string.app_name));
 		cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 		startActivityForResult(cameraIntent, TAKE_PHOTO_ACTIVITY_REQUEST);
+		mPhotoMessage.setPhotoPath(uri.getPath());
 	}
 
 	private void loadFromGallery() {
@@ -139,7 +141,9 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (requestCode == TAKE_PHOTO_ACTIVITY_REQUEST) {
 			Log.d(LOG, "back from taking a photo");
 			// TODO: Get and show the bitmap
-
+			mBitmap = BitmapFactory.decodeFile(mPhotoMessage.getPhotoPath());
+			mImageView.setImageBitmap(mBitmap);
+			mCanSavePhoto = true;
 		}
 
 		if (requestCode == MainActivity.PICK_FROM_GALLERY_REQUEST) {
