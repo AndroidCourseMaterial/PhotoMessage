@@ -117,8 +117,11 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void takePhoto() {
 		Log.d(LOG, "takePhoto() started");
-		// TODO: Launch an activity using the camera intent
-
+		// DONE: Launch an activity using the camera intent
+		Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		Uri uri = PhotoUtils.getOutputMediaUri(getString(R.string.app_name));
+		cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+		startActivityForResult(cameraIntent, TAKE_PHOTO_ACTIVITY_REQUEST);
 	}
 
 	private void loadFromGallery() {
