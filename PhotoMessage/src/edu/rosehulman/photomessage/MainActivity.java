@@ -61,8 +61,9 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		// Set the initial image to be the launcher icon (feel free to add your
 		// own drawable)
-		mBitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.ic_launcher);
+//		mBitmap = BitmapFactory.decodeResource(getResources(),
+//				R.drawable.ic_launcher);
+		mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150210_101614.jpg");
 		mImageView.setImageBitmap(mBitmap);
 		mCanSavePhoto = true;
 
@@ -279,7 +280,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		// notification ID for the manager to use.
 		Intent notificationIntent = new Intent(this,
 				NotificationBroadcastReceiver.class);
-		notificationIntent.putExtra(KEY_SOON_NOTIFICATION, notificationIntent);
+		notificationIntent.putExtra(KEY_NOTIFICATION, notification);
 		notificationIntent.putExtra(KEY_SOON_NOTIFICATION_ID,
 				SOON_NOTIFICATION_ID);
 		int unusedRequestCode = 0;
