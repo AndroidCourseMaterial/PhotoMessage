@@ -37,7 +37,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	static final String KEY_PHOTO_MESSAGE = "KEY_PHOTO_MESSAGE";
 	static final String KEY_SOON_NOTIFICATION_ID = "KEY_SOON_NOTIFICATION_ID";
 	static final String KEY_NOTIFICATION = "KEY_NOTIFICATION";
+	static final String KEY_SOON_NOTIFICATION = "KEY_SOON_NOTIFICATION";
 	private static final int NOTIFICATION_ID = 17;
+	private static final int SOON_NOTIFICATION_ID = 22;
+	private final int SECONDS_UNTIL_ALARM = 15;
+
 	private static final int THUMBNAIL_SIZE = 96;
 
 	private static PhotoMessage mPhotoMessage = null;
@@ -198,7 +202,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			notifyNow();
 			return true;
 		case R.id.action_show_later:
-			showLater();
+			notifyLater();
 			return true;
 		case R.id.action_save_photo:
 			savePhoto();
@@ -237,7 +241,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		Notification notification = getNotification(displayIntent);
 		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(NOTIFICATION_ID, notification);
-
 	}
 
 	private Notification getNotification(Intent intent) {
@@ -258,20 +261,36 @@ public class MainActivity extends Activity implements OnClickListener {
 		return builder.build();
 	}
 
-	private void showLater() {
-		Log.d(LOG, "showLater() started");
+	private void notifyLater() {
+		Log.d(LOG, "notifyLater() started");
 		DialogFragment df = new SetAlarmDialogFragment();
 		df.show(getFragmentManager(), "set alarm");
 	}
 
 	public void setSoonAlarm() {
+		// Make an intent and notification from it.
 		Intent displayIntent = new Intent(this,
 				DisplayLabeledPhotoActivity.class);
 		displayIntent.putExtra(KEY_PHOTO_MESSAGE, mPhotoMessage);
 		Log.d(MainActivity.LOG, "Photo message to send: " + mPhotoMessage);
+		Notification notification = getNotification(displayIntent);
 
-		// TODO: Replace this with a notification that launches via a timer.
-		startActivity(displayIntent);
+		// Create an intent from this to send to the alarm manager. Add a
+		// notification ID for the manager to use.
+		Intent notificationIntent = new Intent(this,
+				NotificationBroadcastReceiver.class);
+		notificationIntent.putExtra(KEY_SOON_NOTIFICATION, notificationIntent);
+		notificationIntent.putExtra(KEY_SOON_NOTIFICATION_ID,
+				SOON_NOTIFICATION_ID);
+		int unusedRequestCode = 0;
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this,
+				unusedRequestCode, notificationIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		long futureInMillis = SystemClock.elapsedRealtime()
+				+ SECONDS_UNTIL_ALARM * 1000;
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis,
+				pendingIntent);
 	}
 
 	public void setFixedAlarm(int hour, int minute) {
