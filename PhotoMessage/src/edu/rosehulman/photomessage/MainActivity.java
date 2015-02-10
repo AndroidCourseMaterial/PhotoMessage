@@ -94,7 +94,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
 				float distanceX, float distanceY) {
-			if (moveMessage) {
+			if (moveMessage && mMessageTextView != null) {
 				float x = e2.getX();
 				float y = e2.getY();
 				mPhotoMessage.setLeft(x);
@@ -296,8 +296,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	public void setFixedAlarm(int hour, int minute) {
-		// TODO: Implement this (if we have time in class)
-
+		// Pleaceholder if you wanted to try this out (totally optional)
 	}
 
 	private void savePhoto() {
