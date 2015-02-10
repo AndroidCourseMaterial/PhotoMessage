@@ -33,7 +33,6 @@ public class PhotoUtils {
 				+ "IMG_" + timeStamp + ".jpg");
 		// Return the URI of the file.
 		Log.d(MainActivity.LOG, "The path is " + Uri.fromFile(mediaFile).getPath());		
-		
 		return Uri.fromFile(mediaFile);
 	}
 

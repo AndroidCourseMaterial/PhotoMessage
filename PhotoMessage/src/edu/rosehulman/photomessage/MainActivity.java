@@ -37,6 +37,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	static final String KEY_PHOTO_MESSAGE = "KEY_PHOTO_MESSAGE";
 	static final String KEY_SOON_NOTIFICATION_ID = "KEY_SOON_NOTIFICATION_ID";
 	static final String KEY_NOTIFICATION = "KEY_NOTIFICATION";
+	private static final int NOTIFICATION_ID = 17;
+	private static final int THUMBNAIL_SIZE = 96;
 
 	private static PhotoMessage mPhotoMessage = null;
 	private boolean mCanSavePhoto = false;
@@ -118,7 +120,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void takePhoto() {
 		Log.d(LOG, "takePhoto() started");
 		// DONE: Launch an activity using the camera intent
-		
+
 		Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		Uri uri = PhotoUtils.getOutputMediaUri(getString(R.string.app_name));
 		cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -128,8 +130,10 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void loadFromGallery() {
 		Log.d(LOG, "loadFromGallery() started");
-		// TODO: Launch the gallery to pick a photo from it.
-
+		// DONE: Launch the gallery to pick a photo from it.
+		Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(galleryIntent, PICK_FROM_GALLERY_REQUEST);
 	}
 
 	@Override
@@ -140,7 +144,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		if (requestCode == TAKE_PHOTO_ACTIVITY_REQUEST) {
 			Log.d(LOG, "back from taking a photo");
-			// TODO: Get and show the bitmap
+			// DONE: Get and show the bitmap
 			mBitmap = BitmapFactory.decodeFile(mPhotoMessage.getPhotoPath());
 			mImageView.setImageBitmap(mBitmap);
 			mCanSavePhoto = true;
@@ -148,8 +152,15 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		if (requestCode == MainActivity.PICK_FROM_GALLERY_REQUEST) {
 			Log.d(LOG, "Back from the gallery");
-			// TODO: Get and show the bitmap
-
+			// DONE: Get and show the bitmap
+			Uri uri = data.getData();
+			Log.d(LOG, "URI from gallery:" + uri);
+			String realPath = getRealPathFromUri(uri);
+			Log.d(LOG, "Real URI on device:" + realPath);
+			mBitmap = BitmapFactory.decodeFile(realPath);
+			mImageView.setImageBitmap(mBitmap);
+			mPhotoMessage.setPhotoPath(realPath);
+			mCanSavePhoto = false;
 		}
 
 	}
@@ -222,7 +233,29 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.d(MainActivity.LOG, "Photo message to send: " + mPhotoMessage);
 
 		// TODO: Replace this with a notification.
-		startActivity(displayIntent);
+		// startActivity(displayIntent);
+		Notification notification = getNotification(displayIntent);
+		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.notify(NOTIFICATION_ID, notification);
+
+	}
+
+	private Notification getNotification(Intent intent) {
+		Notification.Builder builder = new Notification.Builder(this);
+		builder.setContentTitle(getString(R.string.notification_title));
+		builder.setContentText(mPhotoMessage.getMessage());
+		builder.setSmallIcon(android.R.drawable.ic_menu_camera);
+		Bitmap thumbnail = Bitmap.createScaledBitmap(mBitmap, THUMBNAIL_SIZE,
+				THUMBNAIL_SIZE, true);
+		builder.setLargeIcon(thumbnail);
+		// The last flag is useful if you want to re-use a non-dismissed
+		// notification. Setting that flag and issuing a new notification with
+		// the same ID as a previous one just replaces its contents.
+		int unusedRequestCode = 0; // arbitrary
+		PendingIntent pendingIntent = PendingIntent.getActivity(this,
+				unusedRequestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		builder.setContentIntent(pendingIntent);
+		return builder.build();
 	}
 
 	private void showLater() {
