@@ -63,7 +63,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		// own drawable)
 //		mBitmap = BitmapFactory.decodeResource(getResources(),
 //				R.drawable.ic_launcher);
-		mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150210_101614.jpg");
+// For debugging:
+		mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150209_131016.jpg");
 		mImageView.setImageBitmap(mBitmap);
 		mCanSavePhoto = true;
 
