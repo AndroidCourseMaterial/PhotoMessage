@@ -180,7 +180,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			notifyNow();
 			return true;
 		case R.id.action_show_later:
-			showLater();
+			notifyLater();
 			return true;
 		case R.id.action_save_photo:
 			savePhoto();
@@ -218,7 +218,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		startActivity(displayIntent);
 	}
 
-	private void showLater() {
+	private void notifyLater() {
 		Log.d(LOG, "showLater() started");
 		DialogFragment df = new SetAlarmDialogFragment();
 		df.show(getFragmentManager(), "set alarm");
@@ -235,8 +235,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	public void setFixedAlarm(int hour, int minute) {
-		// TODO: Implement this (if we have time in class)
-
+		// Pleaceholder if you wanted to try this out (totally optional)
 	}
 
 	private void savePhoto() {
