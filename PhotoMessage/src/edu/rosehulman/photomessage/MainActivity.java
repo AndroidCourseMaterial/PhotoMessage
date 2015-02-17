@@ -1,11 +1,14 @@
 package edu.rosehulman.photomessage;
 
+import java.io.FileNotFoundException;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -137,8 +140,11 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void loadFromGallery() {
 		Log.d(LOG, "loadFromGallery() started");
 		// DONE: Launch the gallery to pick a photo from it.
-		Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//		Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+//				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+// Better?
+		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		galleryIntent.setType("image/*");
 		startActivityForResult(galleryIntent, PICK_FROM_GALLERY_REQUEST);
 	}
 
@@ -163,7 +169,14 @@ public class MainActivity extends Activity implements OnClickListener {
 			Log.d(LOG, "URI from gallery:" + uri);
 			String realPath = getRealPathFromUri(uri);
 			Log.d(LOG, "Real URI on device:" + realPath);
-			mBitmap = BitmapFactory.decodeFile(realPath);
+			// Doesn't work with online (non-Gallery) images:
+			// mBitmap = BitmapFactory.decodeFile(realPath);
+			try {
+				ContentResolver resolver = getContentResolver();
+				mBitmap = BitmapFactory.decodeStream(resolver.openInputStream(uri));
+			} catch (FileNotFoundException e) {
+				Log.e(LOG, "Error: " + e);
+			}
 			mImageView.setImageBitmap(mBitmap);
 			mPhotoMessage.setPhotoPath(realPath);
 			mCanSavePhoto = false;
