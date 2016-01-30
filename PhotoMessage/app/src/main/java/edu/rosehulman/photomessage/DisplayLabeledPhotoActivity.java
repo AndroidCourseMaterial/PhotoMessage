@@ -3,6 +3,7 @@ package edu.rosehulman.photomessage;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,7 @@ public class DisplayLabeledPhotoActivity extends Activity {
         setContentView(R.layout.activity_display_labeled_photo);
 
         PhotoMessage photoMessage = getIntent().getParcelableExtra(MainActivity.KEY_PHOTO_MESSAGE);
-        Log.d(MainActivity.LOG, "Photo message received: " + photoMessage);
+        Log.d(Constants.TAG, "setMessage message received: " + photoMessage);
         
         ImageView imageView = (ImageView) findViewById(R.id.labeled_image_view);
 
@@ -28,7 +29,7 @@ public class DisplayLabeledPhotoActivity extends Activity {
             Uri uri = Uri.parse(photoMessage.getPath());
             bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
         } catch (FileNotFoundException e) {
-            Log.e(MainActivity.LOG, "Error: " + e);
+            Log.e(Constants.TAG, "Error: " + e);
         }
         // Bitmap bitmap = BitmapFactory.decodeFile(photoMessage.getUri());
         imageView.setImageBitmap(bitmap);
@@ -38,6 +39,6 @@ public class DisplayLabeledPhotoActivity extends Activity {
         messageTextView.setTextSize(32);
         messageTextView.setX(photoMessage.getLeft());
         messageTextView.setY(photoMessage.getTop());
-        
+        messageTextView.setTextColor(photoMessage.isWhite() ? Color.WHITE : Color.BLACK);
     }
 }

@@ -1,13 +1,13 @@
 package edu.rosehulman.photomessage;
 
+import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 
 public class PhotoUtils {
 	static Uri getOutputMediaUri(String folder) {
@@ -16,12 +16,12 @@ public class PhotoUtils {
 						.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
 				folder);
 
-		Log.d(MainActivity.LOG, "Media to be stored at " + storageDir.getPath());
+		Log.d(Constants.TAG, "Media to be stored at " + storageDir.getPath());
 
 		// Create the storage directory if it does not exist
 		if (!storageDir.exists()) {
 			if (!storageDir.mkdirs()) {
-				Log.d(MainActivity.LOG, "Failed to create directory");
+				Log.d(Constants.TAG, "Failed to create directory");
 				return null;
 			}
 		}

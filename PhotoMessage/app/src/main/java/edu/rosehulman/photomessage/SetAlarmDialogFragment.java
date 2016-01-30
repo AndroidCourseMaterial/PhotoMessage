@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -25,6 +26,7 @@ public class SetAlarmDialogFragment extends DialogFragment {
 
 	@SuppressLint("InflateParams")
 	@Override
+	@NonNull
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle("Set time for message");

@@ -2,17 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/dialog_add_message_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minLines="2"
         android:ems="10"
-        android:hint="@string/dialog_add_message_hint" >
+        android:hint="@string/dialog_add_message_hint"
+        android:minLines="2">
 
         <requestFocus />
     </EditText>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/color" />
+
+    <ToggleButton
+        android:id="@+id/dialog_add_message_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="@string/black"
+        android:textOn="@string/white" />
+
 
 </LinearLayout>

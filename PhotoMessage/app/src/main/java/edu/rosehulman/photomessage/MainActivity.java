@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,7 +24,6 @@ import com.github.clans.fab.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final String LOG = "LOG";
     static final String KEY_MESSAGE = "KEY_MESSAGE";
     static final String KEY_IMAGE_FILENAME = "KEY_IMAGE_FILENAME";
     static final String KEY_PHOTO_MESSAGE = "KEY_PHOTO_MESSAGE";
@@ -52,15 +52,20 @@ public class MainActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.image_view);
         mBitmap = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
+        // For debugging
+        mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150810_132053.jpg");
+
+
         mBitmap = Bitmap.createScaledBitmap(mBitmap, 512, 512, true);
         mImageView.setImageBitmap(mBitmap);
         mCanSavePhoto = true;
 
 
         mPhotoMessage = new PhotoMessage();
+        
         mGestureDetector = new GestureDetector(this,
                 new MessageGestureListener());
-        Log.d(LOG, "onCreate() completed");
+        Log.d(Constants.TAG, "onCreate() completed");
 
     }
 
@@ -122,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void takePhoto() {
-        Log.d(LOG, "takePhoto() started");
+        Log.d(Constants.TAG, "takePhoto() started");
         // TODO: Launch an activity using the camera intent
     }
 
     private void loadFromGallery() {
-        Log.d(LOG, "loadFromGallery() started");
+        Log.d(Constants.TAG, "loadFromGallery() started");
         // TODO: Launch the gallery to pick a photo from it.
 
     }
@@ -139,28 +144,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (requestCode == RC_PHOTO_ACTIVITY) {
-            Log.d(LOG, "back from taking a photo");
+            Log.d(Constants.TAG, "back from taking a photo");
             // TODO: Get and show the bitmap
 
         }
 
         if (requestCode == MainActivity.PICK_FROM_GALLERY_REQUEST) {
-            Log.d(LOG, "Back from the gallery");
+            Log.d(Constants.TAG, "Back from the gallery");
             // TODO: Get and show the bitmap
 
         }
-
     }
 
     private void addMessage() {
-        Log.d(LOG, "addMessage() started");
+        Log.d(Constants.TAG, "addMessage() started");
         DialogFragment df = new AddMessageDialogFragment();
         df.show(getSupportFragmentManager(), "add message");
     }
 
-    public void setMessage(String message) {
-        Log.d(LOG, "Got message " + message);
+    public void setMessage(String message, boolean selected) {
+        Log.d(Constants.TAG, "Got message " + message);
         mPhotoMessage.setMessage(message);
+        mPhotoMessage.setIsWhite(selected);
+
         if (mMessageTextView == null) {
             mMessageTextView = new TextView(this);
             mMessageTextView.setTextSize(32);
@@ -168,15 +174,17 @@ public class MainActivity extends AppCompatActivity {
             layout.addView(mMessageTextView);
         }
         mMessageTextView.setText(message);
+        mMessageTextView.setTextColor(selected ? Color.WHITE : Color.BLACK);
+        Log.d(Constants.TAG, "" + mMessageTextView.getCurrentTextColor());
     }
 
     private void notifyNow() {
-        Log.d(LOG, "notifyNow() started");
+        Log.d(Constants.TAG, "notifyNow() started");
         if (mPhotoMessage != null && mPhotoMessage.getPath() != null) {
             Intent displayIntent = new Intent(this,
                     DisplayLabeledPhotoActivity.class);
             displayIntent.putExtra(KEY_PHOTO_MESSAGE, mPhotoMessage);
-            Log.d(MainActivity.LOG, "Photo message to send: " + mPhotoMessage);
+            Log.d(Constants.TAG, "setMessage message to send: " + mPhotoMessage);
 
             // TODO: Replace this with a notification.
             startActivity(displayIntent);
@@ -184,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void notifyLater() {
-        Log.d(LOG, "showLater() started");
+        Log.d(Constants.TAG, "showLater() started");
         DialogFragment df = new SetAlarmDialogFragment();
         df.show(getSupportFragmentManager(), "set alarm");
     }
@@ -193,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         Intent displayIntent = new Intent(this,
                 DisplayLabeledPhotoActivity.class);
         displayIntent.putExtra(KEY_PHOTO_MESSAGE, mPhotoMessage);
-        Log.d(MainActivity.LOG, "Photo message to send: " + mPhotoMessage);
+        Log.d(Constants.TAG, "setMessage message to send: " + mPhotoMessage);
 
         // TODO: Replace this with a notification that launches via a timer.
         startActivity(displayIntent);
@@ -209,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             task.execute(mBitmap);
             mCanSavePhoto = false;
         } else {
-            Log.d(LOG, "Can't save this photo now.");
+            Log.d(Constants.TAG, "Can't save this photo now.");
         }
     }
 
