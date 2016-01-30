@@ -30,7 +30,6 @@ public class DisplayLabeledPhotoActivity extends Activity {
 //        }
         Bitmap bitmap = BitmapFactory.decodeFile(photoMessage.getPath());
         bitmap = Bitmap.createScaledBitmap(bitmap, 512, 512, true);
-
         imageView.setImageBitmap(bitmap);
 
         TextView messageTextView = (TextView) findViewById(R.id.labeled_text_view);
