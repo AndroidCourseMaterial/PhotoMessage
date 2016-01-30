@@ -22,7 +22,15 @@ public class DisplayLabeledPhotoActivity extends Activity {
         Log.d(MainActivity.LOG, "Photo message received: " + photoMessage);
         
         ImageView imageView = (ImageView) findViewById(R.id.labeled_image_view);
-        Bitmap bitmap = BitmapFactory.decodeFile(photoMessage.getPhotoPath());
+
+		Bitmap bitmap = null; 
+		try {
+	        Uri uri = Uri.parse(photoMessage.getUri());
+			bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+		} catch (FileNotFoundException e) {
+			Log.e(MainActivity.LOG, "Error: " + e);
+		}
+        // Bitmap bitmap = BitmapFactory.decodeFile(photoMessage.getUri());
         imageView.setImageBitmap(bitmap);
 
         TextView messageTextView = (TextView) findViewById(R.id.labeled_text_view);
