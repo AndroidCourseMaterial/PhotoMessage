@@ -10,27 +10,30 @@ public class PhotoMessage implements Parcelable {
 	private String path;
 	private float left;
 	private float top;
+	private boolean isWhite;
 
-	protected PhotoMessage(Parcel in) {
-		message = in.readString();
-		path = in.readString();
-		left = in.readFloat();
-		top = in.readFloat();
-	}
 
-	public static final Creator<PhotoMessage> CREATOR = new Creator<PhotoMessage>() {
-		@Override
-		public PhotoMessage createFromParcel(Parcel in) {
-			return new PhotoMessage(in);
-		}
+    protected PhotoMessage(Parcel in) {
+        message = in.readString();
+        path = in.readString();
+        left = in.readFloat();
+        top = in.readFloat();
+        isWhite = in.readByte() != 0;
+    }
 
-		@Override
-		public PhotoMessage[] newArray(int size) {
-			return new PhotoMessage[size];
-		}
-	};
+    public static final Creator<PhotoMessage> CREATOR = new Creator<PhotoMessage>() {
+        @Override
+        public PhotoMessage createFromParcel(Parcel in) {
+            return new PhotoMessage(in);
+        }
 
-	public String getMessage() {
+        @Override
+        public PhotoMessage[] newArray(int size) {
+            return new PhotoMessage[size];
+        }
+    };
+
+    public String getMessage() {
 		return message;
 	}
 
@@ -66,25 +69,33 @@ public class PhotoMessage implements Parcelable {
 		// empty
 	}
 
+	public boolean isWhite() {
+		return isWhite;
+	}
+
+	public void setIsWhite(boolean isWhite) {
+		this.isWhite = isWhite;
+	}
 
 	@SuppressLint("DefaultLocale")
 	@Override
 	public String toString() {
 		return String.format(
-				"Photomessage: message=[%s], photo=[%s], location=(%.1f,%.1f)",
-				message, path, left, top);
+				"Photomessage: message=[%s], photo=[%s], location=(%.1f,%.1f), isWhite=%s",
+				message, path, left, top, isWhite);
 	}
 
-	@Override
-	public int describeContents() {
-		return 0;
-	}
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(message);
-		dest.writeString(path);
-		dest.writeFloat(left);
-		dest.writeFloat(top);
-	}
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(message);
+        dest.writeString(path);
+        dest.writeFloat(left);
+        dest.writeFloat(top);
+        dest.writeByte((byte) (isWhite ? 1 : 0));
+    }
 }
