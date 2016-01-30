@@ -7,7 +7,7 @@ import android.os.Parcelable;
 public class PhotoMessage implements Parcelable {
 
 	private String mMessage;
-	private String mPhotoPath;
+	private String mPath;
 	private float mLeft;
 	private float mTop;
 
@@ -23,7 +23,7 @@ public class PhotoMessage implements Parcelable {
 	public PhotoMessage(Parcel src) {
 
 		mMessage = src.readString();
-		mPhotoPath = src.readString();
+		mPath = src.readString();
 		mLeft = src.readFloat();
 		mTop = src.readFloat();
 	}
@@ -31,7 +31,7 @@ public class PhotoMessage implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(mMessage);
-		dest.writeString(mPhotoPath);
+		dest.writeString(mPath);
 		dest.writeFloat(mLeft);
 		dest.writeFloat(mTop);
 	}
@@ -50,39 +50,39 @@ public class PhotoMessage implements Parcelable {
 		return mMessage;
 	}
 
-	public void setMessage(String mMessage) {
-		this.mMessage = mMessage;
+	public void setMessage(String message) {
+		this.mMessage = message;
 	}
 
-	public String getPhotoPath() {
-		return mPhotoPath;
+	public String getUri() {
+		return mPath;
 	}
 
-	public void setPhotoPath(String mPhotoPath) {
-		this.mPhotoPath = mPhotoPath;
+	public void setPath(String uri) {
+		this.mPath = uri;
 	}
 
 	public float getTop() {
 		return mTop;
 	}
 
-	public void setTop(float mTop) {
-		this.mTop = mTop;
+	public void setTop(float top) {
+		this.mTop = top;
 	}
 
 	public float getLeft() {
 		return mLeft;
 	}
 
-	public void setLeft(float mLeft) {
-		this.mLeft = mLeft;
+	public void setLeft(float left) {
+		this.mLeft = left;
 	}
 
 	@SuppressLint("DefaultLocale")
 	@Override
 	public String toString() {
 		return String.format(
-				"Photomessage: message=[%s], photo=[%s], location=(%.1f,%.1f)",
-				mMessage, mPhotoPath, mLeft, mTop);
+				"Photomessage: photo=[%s], message=[%s], location=(%.1f,%.1f)",
+				mPath, mMessage, mLeft, mTop);
 	}
 }

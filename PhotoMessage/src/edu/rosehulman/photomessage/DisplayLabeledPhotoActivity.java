@@ -1,8 +1,11 @@
 package edu.rosehulman.photomessage;
 
+import java.io.FileNotFoundException;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;

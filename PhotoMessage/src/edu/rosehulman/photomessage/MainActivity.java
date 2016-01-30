@@ -64,10 +64,12 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		// Set the initial image to be the launcher icon (feel free to add your
 		// own drawable)
-//		mBitmap = BitmapFactory.decodeResource(getResources(),
-//				R.drawable.ic_launcher);
+		mBitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.ic_launcher);
 // For debugging:
-		mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150209_131016.jpg");
+//		mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150209_131016.jpg");
+		mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150810_132053.jpg");
+		mBitmap = Bitmap.createScaledBitmap(mBitmap, 2048, 2048, true);
 		mImageView.setImageBitmap(mBitmap);
 		mCanSavePhoto = true;
 
@@ -134,15 +136,15 @@ public class MainActivity extends Activity implements OnClickListener {
 		Uri uri = PhotoUtils.getOutputMediaUri(getString(R.string.app_name));
 		cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 		startActivityForResult(cameraIntent, TAKE_PHOTO_ACTIVITY_REQUEST);
-		mPhotoMessage.setPhotoPath(uri.getPath());
+		mPhotoMessage.setPath(uri.getPath());
 	}
 
 	private void loadFromGallery() {
 		Log.d(LOG, "loadFromGallery() started");
-		// DONE: Launch the gallery to pick a photo from it.
+		// DONE: Launch the gallery to pick a photo from it. This only works with the on-device gallery, not online sources.
 //		Intent galleryIntent = new Intent(Intent.ACTION_PICK,
 //				MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-// Better?
+		// Better?
 		Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		galleryIntent.setType("image/*");
 		startActivityForResult(galleryIntent, PICK_FROM_GALLERY_REQUEST);
@@ -157,7 +159,11 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (requestCode == TAKE_PHOTO_ACTIVITY_REQUEST) {
 			Log.d(LOG, "back from taking a photo");
 			// DONE: Get and show the bitmap
-			mBitmap = BitmapFactory.decodeFile(mPhotoMessage.getPhotoPath());
+			mBitmap = BitmapFactory.decodeFile(mPhotoMessage.getUri());
+			
+			
+			
+			
 			mImageView.setImageBitmap(mBitmap);
 			mCanSavePhoto = true;
 		}
@@ -178,10 +184,9 @@ public class MainActivity extends Activity implements OnClickListener {
 				Log.e(LOG, "Error: " + e);
 			}
 			mImageView.setImageBitmap(mBitmap);
-			mPhotoMessage.setPhotoPath(realPath);
+			mPhotoMessage.setPath(uri.getPath());
 			mCanSavePhoto = false;
 		}
-
 	}
 
 	// From
