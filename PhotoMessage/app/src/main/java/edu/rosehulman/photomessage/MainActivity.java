@@ -124,6 +124,11 @@ public class MainActivity extends AppCompatActivity {
     private void takePhoto() {
         Log.d(LOG, "takePhoto() started");
         // TODO: Launch an activity using the camera intent
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = PhotoUtils.getOutputMediaUri(getString(R.string.app_name));
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(cameraIntent, RC_PHOTO_ACTIVITY);
+        mPhotoMessage.setPath(uri.getPath());
     }
 
     private void loadFromGallery() {
@@ -141,7 +146,12 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RC_PHOTO_ACTIVITY) {
             Log.d(LOG, "back from taking a photo");
             // TODO: Get and show the bitmap
-
+            mBitmap = BitmapFactory.decodeFile(mPhotoMessage.getPath());
+            //Use the next 2 lines if your camera res is so high, it crashes your app
+            int width = 512, height = 512;
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, width, height, true);
+            mImageView.setImageBitmap(mBitmap);
+            mCanSavePhoto = true;
         }
 
         if (requestCode == MainActivity.PICK_FROM_GALLERY_REQUEST) {
