@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
                 R.mipmap.ic_launcher);
         // For debugging
         mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150810_132053.jpg");
-
-
         mBitmap = Bitmap.createScaledBitmap(mBitmap, 512, 512, true);
         mImageView.setImageBitmap(mBitmap);
         mCanSavePhoto = true;
@@ -132,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri uri = PhotoUtils.getOutputMediaUri(getString(R.string.app_name));
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        Log.d(Constants.TAG, "Path " + uri.getPath());
         startActivityForResult(cameraIntent, RC_PHOTO_ACTIVITY);
         mPhotoMessage.setPath(uri.getPath());
     }
@@ -151,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == RC_PHOTO_ACTIVITY) {
             Log.d(Constants.TAG, "back from taking a photo");
+            Log.d(Constants.TAG, "Path " + mPhotoMessage.getPath());
             // TODO: Get and show the bitmap
             mBitmap = BitmapFactory.decodeFile(mPhotoMessage.getPath());
             //Use the next 2 lines if your camera res is so high, it crashes your app
