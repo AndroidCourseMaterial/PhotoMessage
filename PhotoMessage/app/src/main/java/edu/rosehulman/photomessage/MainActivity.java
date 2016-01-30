@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     static final String KEY_SOON_NOTIFICATION_ID = "KEY_SOON_NOTIFICATION_ID";
     static final String KEY_NOTIFICATION = "KEY_NOTIFICATION";
     private static final int RC_PHOTO_ACTIVITY = 1;
-    private static final int PICK_FROM_GALLERY_REQUEST = 2;
+    private static final int RC_PICK_FROM_GALLERY = 2;
     private static PhotoMessage mPhotoMessage = null;
     private boolean mCanSavePhoto = false;
     private Bitmap mBitmap;
@@ -134,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadFromGallery() {
         Log.d(LOG, "loadFromGallery() started");
         // TODO: Launch the gallery to pick a photo from it.
-
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(galleryIntent, RC_PICK_FROM_GALLERY);
     }
 
     @Override
@@ -154,10 +155,17 @@ public class MainActivity extends AppCompatActivity {
             mCanSavePhoto = true;
         }
 
-        if (requestCode == MainActivity.PICK_FROM_GALLERY_REQUEST) {
+        if (requestCode == MainActivity.RC_PICK_FROM_GALLERY) {
             Log.d(LOG, "Back from the gallery");
             // TODO: Get and show the bitmap
-
+            Uri uri = data.getData();
+            String realPath = getRealPathFromUri(uri);
+            mBitmap = BitmapFactory.decodeFile(realPath);
+            int width = 512, height = 512;
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, width, height, true);
+            mImageView.setImageBitmap(mBitmap);
+            mPhotoMessage.setPath(realPath);
+            mCanSavePhoto = false;
         }
 
     }
