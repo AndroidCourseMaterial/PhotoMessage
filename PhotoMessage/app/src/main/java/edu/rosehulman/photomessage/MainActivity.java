@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.image_view);
         mBitmap = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
-        mBitmap = Bitmap.createScaledBitmap(mBitmap, 2048, 2048, true);
+        mBitmap = Bitmap.createScaledBitmap(mBitmap, 512, 512, true);
         mImageView.setImageBitmap(mBitmap);
         mCanSavePhoto = true;
 
