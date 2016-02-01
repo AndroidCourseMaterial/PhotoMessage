@@ -12,6 +12,7 @@
     <string name="menu_notify_now">Notify now</string>
     <string name="dialog_set_time_button_text">Set alarm to go off soon</string>
     <string name="or">Or</string>
+    <string name="notification_title">Photo Message for You!</string>
     <string name="color">Color</string>
     <string name="black">Black</string>
     <string name="white">White</string>
