@@ -1,5 +1,6 @@
 package edu.rosehulman.photomessage;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -208,6 +209,17 @@ public class MainActivity extends AppCompatActivity {
             startActivity(displayIntent);
         }
     }
+
+    private Notification getNotification() {
+        return new Notification.Builder(this)
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(mPhotoMessage.getMessage())
+                .setSmallIcon(android.R.drawable.ic_menu_camera)
+                .setLargeIcon(Bitmap.createBitmap(mBitmap, THUMBNAIL_SIZE, THUMBNAIL_SIZE, true))
+                .build();
+    }
+
+
 
     private void notifyLater() {
         Log.d(Constants.TAG, "showLater() started");
