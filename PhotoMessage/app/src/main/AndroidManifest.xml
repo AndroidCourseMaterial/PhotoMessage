@@ -24,6 +24,12 @@
             android:name=".DisplayLabeledPhotoActivity"
             android:label="@string/display_labeled_photo_activity_text" >
         </activity>
+
+        <receiver android:name=".NotificationBroadcastReceiver" />
+
     </application>
+
+
+
 
 </manifest>

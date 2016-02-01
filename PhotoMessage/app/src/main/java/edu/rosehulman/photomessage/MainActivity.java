@@ -1,6 +1,10 @@
 package edu.rosehulman.photomessage;
 
+import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -8,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.CursorLoader;
@@ -25,13 +30,15 @@ import com.github.clans.fab.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    static final String KEY_MESSAGE = "KEY_MESSAGE";
-    static final String KEY_IMAGE_FILENAME = "KEY_IMAGE_FILENAME";
     static final String KEY_PHOTO_MESSAGE = "KEY_PHOTO_MESSAGE";
     static final String KEY_SOON_NOTIFICATION_ID = "KEY_SOON_NOTIFICATION_ID";
     static final String KEY_NOTIFICATION = "KEY_NOTIFICATION";
     private static final int RC_PHOTO_ACTIVITY = 1;
     private static final int RC_PICK_FROM_GALLERY = 2;
+    private static final int THUMBNAIL_SIZE = 96;
+    private static final int NOTIFICATION_ID = 1;
+    private static final int SOON_NOTIFICATION_ID = 2;
+    private static final int SECONDS_UNTIL_ALARM = 15;
     private static PhotoMessage mPhotoMessage = null;
     private boolean mCanSavePhoto = false;
     private Bitmap mBitmap;
@@ -127,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void takePhoto() {
         Log.d(Constants.TAG, "takePhoto() started");
-        // TODO: Launch an activity using the camera intent
+        // DONE: Launch an activity using the camera intent
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri uri = PhotoUtils.getOutputMediaUri(getString(R.string.app_name));
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -206,20 +213,25 @@ public class MainActivity extends AppCompatActivity {
             Log.d(Constants.TAG, "setMessage message to send: " + mPhotoMessage);
 
             // TODO: Replace this with a notification.
-            startActivity(displayIntent);
+            // startActivity(displayIntent);
+            Notification notification = getNotification(displayIntent);
+            NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(NOTIFICATION_ID, notification);
         }
     }
 
-    private Notification getNotification() {
+    private Notification getNotification(final Intent intent) {
+        int unusedRequestCode = 0;
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, unusedRequestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         return new Notification.Builder(this)
                 .setContentTitle(getString(R.string.notification_title))
                 .setContentText(mPhotoMessage.getMessage())
                 .setSmallIcon(android.R.drawable.ic_menu_camera)
-                .setLargeIcon(Bitmap.createBitmap(mBitmap, THUMBNAIL_SIZE, THUMBNAIL_SIZE, true))
+                .setLargeIcon(Bitmap.createScaledBitmap(mBitmap, THUMBNAIL_SIZE, THUMBNAIL_SIZE, true))
+                .setContentIntent(pendingIntent)
                 .build();
     }
-
-
 
     private void notifyLater() {
         Log.d(Constants.TAG, "showLater() started");
@@ -234,8 +246,17 @@ public class MainActivity extends AppCompatActivity {
         Log.d(Constants.TAG, "setMessage message to send: " + mPhotoMessage);
 
         // TODO: Replace this with a notification that launches via a timer.
-        startActivity(displayIntent);
-    }
+        // startActivity(displayIntent);
+        Notification notification = getNotification(displayIntent);
+        Intent notifictionIntent = new Intent(this, NotificationBroadcastReceiver.class);
+        notifictionIntent.putExtra(KEY_NOTIFICATION, notification);
+        notifictionIntent.putExtra(KEY_SOON_NOTIFICATION_ID, SOON_NOTIFICATION_ID);
+        int unusedRequestCode = 0;
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, unusedRequestCode, notifictionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        long futureInMillis = SystemClock.elapsedRealtime() + SECONDS_UNTIL_ALARM * 1000;
+        AlarmManager alarmManger = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManger.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+            }
 
     public void setFixedAlarm(int hour, int minute) {
         // Pleaceholder if you wanted to try this out (totally optional)
