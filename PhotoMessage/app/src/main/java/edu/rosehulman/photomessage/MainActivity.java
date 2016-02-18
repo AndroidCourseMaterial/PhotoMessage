@@ -248,11 +248,11 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Replace this with a notification that launches via a timer.
         // startActivity(displayIntent);
         Notification notification = getNotification(displayIntent);
-        Intent notifictionIntent = new Intent(this, NotificationBroadcastReceiver.class);
-        notifictionIntent.putExtra(KEY_NOTIFICATION, notification);
-        notifictionIntent.putExtra(KEY_SOON_NOTIFICATION_ID, SOON_NOTIFICATION_ID);
+        Intent notificationIntent = new Intent(this, NotificationBroadcastReceiver.class);
+        notificationIntent.putExtra(KEY_NOTIFICATION, notification);
+        notificationIntent.putExtra(KEY_SOON_NOTIFICATION_ID, SOON_NOTIFICATION_ID);
         int unusedRequestCode = 0;
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, unusedRequestCode, notifictionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, unusedRequestCode, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         long futureInMillis = SystemClock.elapsedRealtime() + SECONDS_UNTIL_ALARM * 1000;
         AlarmManager alarmManger = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarmManger.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
