@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         mBitmap = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.ic_launcher);
         // For debugging
-        mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150810_132053.jpg");
+        // mBitmap = BitmapFactory.decodeFile("/storage/emulated/0/Pictures/PhotoMessage/IMG_20150810_132053.jpg");
 
 
         mBitmap = Bitmap.createScaledBitmap(mBitmap, 512, 512, true);
